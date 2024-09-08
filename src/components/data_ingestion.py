@@ -6,7 +6,10 @@ from src.logger import logging  # Logger for logging messages
 import pandas as pd  # For data manipulation and analysis
 from sklearn.model_selection import train_test_split  # For splitting data into training and test sets
 from dataclasses import dataclass  # To define classes that primarily store data
-
+from src.components.data_transformation import DataTransformation
+from src.components.data_transformation import DataTransformationConfig
+from src.components.model_trainer import ModelTrainer
+from src.components.model_trainer import ModelTrainerConfig
 # DataIngestionConfig will hold the paths for the training, testing, and raw data files
 @dataclass
 class DataIngestionConfig:
@@ -60,6 +63,10 @@ class DataIngestion:
         except Exception as e:
             raise CustomException(e, sys)
 
-if __name__=="__main__":
-    obj=DataIngestion()
-    obj.initiate_data_ingestion()
+if __name__ == "__main__":
+    obj = DataIngestion()
+    train_data, test_data = obj.initiate_data_ingestion()
+    data_transformation = DataTransformation()
+    train_arr,test_arr=data_transformation.initiate_data_transformation(train_data, test_data)  # Corrected function name
+    modeltrainer=ModelTrainer()
+    print(modeltrainer.initiate_model_trainer(train_arr,test_arr))
